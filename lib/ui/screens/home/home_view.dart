@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:todo/core/utils/constant/kColors.dart';
 
 import 'home_view_model.dart';
+import 'package:todo/core/utils/constant/kColors.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
   static const routeName = '/home-page';
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -14,6 +16,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
+    final uid = ModalRoute.of(context)?.settings.arguments;
     return ChangeNotifierProvider(
       create: (context) => HomeViewModel(),
       child: Consumer<HomeViewModel>(
@@ -45,7 +48,7 @@ class _HomeViewState extends State<HomeView> {
                       color: kColors.whiteColor,
                       child: Center(
                         child: Text(
-                          "Hello user",
+                          "Hello ${model.readUser(uid.toString())}",
                           style: TextStyle(fontSize: 30),
                         ),
                       )),

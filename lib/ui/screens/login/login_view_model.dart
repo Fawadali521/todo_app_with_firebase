@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo/core/utils/constant/kColors.dart';
@@ -11,7 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class LoginViewModel with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  UserCredential? userCredential;
   void loginAccount(BuildContext context) async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -19,14 +20,15 @@ class LoginViewModel with ChangeNotifier {
       Utils().toastMessage('Please Fill All Details', kColors.redColor);
     } else {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
+        userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
         Utils()
             .toastMessage('Your Account Successful sign in', kColors.blueColor);
-        log(userCredential.user!.uid.toString());
-        if (userCredential.user != null) {
+        log(userCredential!.user!.uid.toString());
+        if (userCredential!.user != null) {
           Navigator.popUntil(context, (route) => route.isFirst);
-          Navigator.of(context).pushReplacementNamed(HomeView.routeName);
+          Navigator.of(context).pushReplacementNamed(HomeView.routeName,
+              arguments: userCredential!.user!.uid.toString());
         }
       } on FirebaseAuthException catch (error) {
         Utils().toastMessage(error.code.toString(), kColors.redColor);

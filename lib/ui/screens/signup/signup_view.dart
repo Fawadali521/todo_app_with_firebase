@@ -56,6 +56,7 @@ class SignUpView extends StatelessWidget {
                               signText: 'Sign Up',
                               onpressed: () {
                                 model.createAccount(context);
+                                // model.addUser();
                               },
                             ),
                             CustomHintText(
