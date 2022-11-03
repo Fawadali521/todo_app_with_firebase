@@ -9,14 +9,16 @@ import 'package:todo/ui/screens/home/home_view.dart';
 import 'package:todo/ui/screens/signup/signup_view.dart';
 import 'package:todo/ui/screens/signup/signup_view_model.dart';
 
+import 'login_view_model.dart';
+
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
   static const routeName = '/';
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SignUpViewModel(),
-      child: Consumer<SignUpViewModel>(
+      create: (context) => LoginViewModel(),
+      child: Consumer<LoginViewModel>(
         builder: (context, model, child) {
           return Scaffold(
             appBar: AppBar(
@@ -50,8 +52,7 @@ class LoginView extends StatelessWidget {
                             CustomSignButton(
                               signText: 'Login',
                               onpressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(HomeView.routeName);
+                                model.loginAccount(context);
                               },
                             ),
                             CustomHintText(

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/ui/screens/login/login_view.dart';
 
 class HomeViewModel with ChangeNotifier {
   List todo = ["first day", 'second day'];
@@ -15,5 +17,11 @@ class HomeViewModel with ChangeNotifier {
     } else {
       return labelString = 'Evening';
     }
+  }
+
+  void logOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.of(context).pushReplacementNamed(LoginView.routeName);
   }
 }

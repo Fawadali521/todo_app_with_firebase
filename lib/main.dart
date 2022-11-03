@@ -30,7 +30,12 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 useMaterial3: true,
               ),
-              initialRoute: LoginView.routeName,
+              // home: (FirebaseAuth.instance.currentUser != null)
+              //     ? HomeView()
+              //     : LoginView(),
+              initialRoute: (FirebaseAuth.instance.currentUser != null)
+                  ? HomeView.routeName
+                  : LoginView.routeName,
               routes: {
                 LoginView.routeName: (context) => LoginView(),
                 SignUpView.routeName: (context) => SignUpView(),

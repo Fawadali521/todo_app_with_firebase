@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/core/utils/constant/kColors.dart';
-import 'package:todo/ui/custom_widgets/custom_textformfield.dart';
 
 import 'home_view_model.dart';
 
@@ -23,6 +22,13 @@ class _HomeViewState extends State<HomeView> {
             appBar: AppBar(
               centerTitle: true,
               title: Text("Home"),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      model.logOut(context);
+                    },
+                    icon: Icon(Icons.logout_outlined))
+              ],
             ),
             body: Container(
               padding: EdgeInsets.only(left: 15, right: 15),

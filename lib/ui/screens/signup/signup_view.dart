@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -54,16 +55,14 @@ class SignUpView extends StatelessWidget {
                             CustomSignButton(
                               signText: 'Sign Up',
                               onpressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(LoginView.routeName);
+                                model.createAccount(context);
                               },
                             ),
                             CustomHintText(
                               text: 'Already have an account?',
                               buttonText: 'Login',
                               ontap: () {
-                                Navigator.of(context)
-                                    .pushNamed(LoginView.routeName);
+                                Navigator.pop(context);
                               },
                             )
                           ],
