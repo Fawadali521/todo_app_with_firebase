@@ -28,8 +28,7 @@ class LoginViewModel with ChangeNotifier {
         log(userCredential!.user!.uid.toString());
         if (userCredential!.user != null) {
           Navigator.popUntil(context, (route) => route.isFirst);
-          Navigator.of(context).pushReplacementNamed(HomeView.routeName,
-              arguments: userCredential!.user!.uid.toString());
+          Navigator.of(context).pushReplacementNamed(HomeView.routeName);
         }
       } on FirebaseAuthException catch (error) {
         Utils().toastMessage(error.code.toString(), kColors.redColor);

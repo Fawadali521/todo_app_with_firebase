@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
                   ? HomeView.routeName
                   : LoginView.routeName,
               routes: {
-                LoginView.routeName: (context) => LoginView(),
-                SignUpView.routeName: (context) => SignUpView(),
+                LoginView.routeName: (context) => const LoginView(),
+                SignUpView.routeName: (context) => const SignUpView(),
                 HomeView.routeName: (context) => HomeView(),
               });
         });

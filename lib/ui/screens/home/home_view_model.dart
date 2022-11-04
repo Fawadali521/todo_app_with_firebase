@@ -1,8 +1,8 @@
-import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+
 import 'package:todo/ui/screens/login/login_view.dart';
 import 'package:todo/core/utils/constant/kColors.dart';
 import '../../../core/utils/package_utils.dart';
@@ -14,23 +14,9 @@ class HomeViewModel with ChangeNotifier {
   String? labelString;
   String? userName;
   bool status = false;
-  String label() {
-    int currentTime = DateTime.now().hour;
-    if (currentTime > 5 && currentTime <= 12) {
-      return labelString = 'Morning';
-    } else if (currentTime > 12 && currentTime <= 17) {
-      return labelString = 'Afternoon';
-    } else {
-      return labelString = 'Evening';
-    }
-  }
-
-  void logOut(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.popUntil(context, (route) => route.isFirst);
-    Navigator.of(context).pushReplacementNamed(LoginView.routeName);
-  }
-
+  //
+  //constructor for user name
+  //
   HomeViewModel() {
     FirebaseFirestore.instance
         .collection('users')
@@ -46,19 +32,43 @@ class HomeViewModel with ChangeNotifier {
     });
   }
 
+  //
+  //label time
+  //
+  String label() {
+    int currentTime = DateTime.now().hour;
+    if (currentTime > 5 && currentTime <= 12) {
+      return labelString = 'Morning';
+    } else if (currentTime > 12 && currentTime <= 17) {
+      return labelString = 'Afternoon';
+    } else {
+      return labelString = 'Evening';
+    }
+  }
+
+//
+  //logout method
+  //
+  void logOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.of(context).pushReplacementNamed(LoginView.routeName);
+  }
+
+  //
+  //initialized  firebase path
+  //
   stream() {
-    final CollectionReference products = FirebaseFirestore.instance
+    final CollectionReference users = FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection('todos');
-    return products;
+    return users;
   }
 
-  // final firestore = FirebaseFirestore.instance
-  //     .collection("users")
-  //     .doc(user!.uid)
-  //     .collection('todos')
-  //     .snapshots();
+  //
+  //create todos
+  //
   Future<void> createTodo(BuildContext context) async {
     String todo = todoController.text.trim();
 
@@ -76,6 +86,9 @@ class HomeViewModel with ChangeNotifier {
     todoController.text = '';
   }
 
+//
+  //update todos
+  //
   Future<void> update(
       DocumentSnapshot? documentSnapshot, BuildContext context) async {
     String todo = todoController.text.trim();
@@ -126,12 +139,17 @@ class HomeViewModel with ChangeNotifier {
         });
   }
 
-  // update status
+//
+  // update status of todo
+  //
   Future<void> updateStatus(
       DocumentSnapshot? documentSnapshot, bool value) async {
     await stream().doc(documentSnapshot!.id).update({"status": value});
   }
 
+//
+  ///delete todo
+  ///
   Future<void> delete(String todoId, BuildContext context) async {
     await stream().doc(todoId).delete();
     Utils().toastMessage(

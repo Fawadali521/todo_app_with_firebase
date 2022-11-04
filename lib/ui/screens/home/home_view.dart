@@ -1,13 +1,12 @@
-import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo/core/utils/constant/kColors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'home_view_model.dart';
+import 'package:provider/provider.dart';
+
 import 'package:todo/core/utils/constant/kColors.dart';
+import 'home_view_model.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key? key}) : super(key: key);
@@ -28,17 +27,20 @@ class _HomeViewState extends State<HomeView> {
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text("Home"),
+              title: const Text("Home"),
               actions: [
                 IconButton(
                     onPressed: () {
                       model.logOut(context);
                     },
-                    icon: Icon(Icons.logout_outlined))
+                    icon: const Icon(Icons.logout_outlined))
               ],
             ),
+            //
+            ///body section start
+            //
             body: Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               color: Colors.teal,
@@ -46,8 +48,10 @@ class _HomeViewState extends State<HomeView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: 20.h),
+                  //
                   //user name
+                  //
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -56,15 +60,17 @@ class _HomeViewState extends State<HomeView> {
                     height: 80,
                     child: Center(
                       child: model.userName == null
-                          ? CircularProgressIndicator()
+                          ? const CircularProgressIndicator()
                           : Text(
                               "Hello ${model.userName}",
-                              style: TextStyle(fontSize: 30),
+                              style: const TextStyle(fontSize: 30),
                             ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  // good time
+                  SizedBox(height: 15.h),
+                  //
+                  // show time
+                  //
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -74,12 +80,14 @@ class _HomeViewState extends State<HomeView> {
                     child: Center(
                       child: Text(
                         'Good ${model.label()}',
-                        style: TextStyle(fontSize: 30),
+                        style: const TextStyle(fontSize: 30),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  // todos
+                  SizedBox(height: 30.h),
+                  //
+                  // show todos
+                  //
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
                       stream: model.stream().snapshots(),
@@ -103,15 +111,15 @@ class _HomeViewState extends State<HomeView> {
                                         ? Text(documentSnapshot['todo'])
                                         : Text(
                                             documentSnapshot['todo'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 decoration:
                                                     TextDecoration.lineThrough),
                                           ),
                                     leading: Checkbox(
                                       value: documentSnapshot['status'],
-                                      onChanged: (Value) {
+                                      onChanged: (value) {
                                         model.updateStatus(
-                                            documentSnapshot, Value!);
+                                            documentSnapshot, value!);
                                       },
                                     ),
                                     trailing: IconButton(
@@ -132,6 +140,9 @@ class _HomeViewState extends State<HomeView> {
                       },
                     ),
                   ),
+                  //
+                  //add todos
+                  //
                   Card(
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
@@ -139,8 +150,6 @@ class _HomeViewState extends State<HomeView> {
                         controller: model.todoController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              top: 15), // add padding to adjust text
                           isDense: true,
                           hintText: 'add todo',
                           hintStyle: TextStyle(
@@ -150,7 +159,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       trailing: SizedBox(
-                        width: 100,
+                        width: 100.w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
