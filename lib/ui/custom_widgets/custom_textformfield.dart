@@ -19,8 +19,6 @@ class CustomTextFormField extends StatelessWidget {
         controller: textEditingController,
         decoration: InputDecoration(
           border: InputBorder.none,
-          contentPadding:
-              EdgeInsets.only(top: 15), // add padding to adjust text
           isDense: true,
           hintText: hintText,
           hintStyle: const TextStyle(

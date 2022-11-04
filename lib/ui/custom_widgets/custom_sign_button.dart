@@ -9,7 +9,6 @@ class CustomSignButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(signText),
       onPressed: onpressed,
       style: ElevatedButton.styleFrom(
           textStyle: const TextStyle(
@@ -20,7 +19,14 @@ class CustomSignButton extends StatelessWidget {
           backgroundColor: kColors.mainColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-          minimumSize: Size(50, 50)),
+          minimumSize: const Size(50, 50)),
+      child: Text(
+        signText,
+        style: const TextStyle(
+          color: kColors.whiteColor,
+          fontSize: 25,
+        ),
+      ),
     );
   }
 }

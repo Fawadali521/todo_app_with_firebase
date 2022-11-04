@@ -1,17 +1,20 @@
 import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+
 import 'package:todo/core/utils/constant/kColors.dart';
-import '../../../core/utils/package_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../core/utils/package_utils.dart';
 
 class SignUpViewModel with ChangeNotifier {
   final TextEditingController userController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   UserCredential? userCredential;
-
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  //Create Account method
   void createAccount(BuildContext context) async {
     String user1 = userController.text.trim();
     String email = emailController.text.trim();
@@ -36,8 +39,9 @@ class SignUpViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+  //
+  //add user in Database
+  //
   Future<void> addUser(String user1) {
     String user1 = userController.text.trim();
     return users
