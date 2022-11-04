@@ -51,6 +51,7 @@ class LoginView extends StatelessWidget {
                               hintText: 'password',
                               pIcon: const Icon(Icons.password_outlined),
                               textEditingController: model.passwordController,
+                              obscureText: true,
                             ),
                             SizedBox(height: 15.h),
                             CustomSignButton(

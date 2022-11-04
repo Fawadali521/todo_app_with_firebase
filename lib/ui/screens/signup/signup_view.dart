@@ -53,6 +53,7 @@ class SignUpView extends StatelessWidget {
                               hintText: 'password',
                               pIcon: const Icon(Icons.password_outlined),
                               textEditingController: model.passwordController,
+                              obscureText: true,
                             ),
                             SizedBox(height: 70.h),
                             CustomSignButton(
