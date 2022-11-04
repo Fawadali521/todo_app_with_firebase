@@ -9,4 +9,6 @@ class kColors {
   static const whiteColor = Color(0xFFFFFFFF);
   static const cartBackColor = Color(0xFFC1DFCB);
   static const recentBackColor = Color(0xFFdab768);
+  static const redColor = Color(0xFFFF0000);
+  static const blueColor = Color(0xFF0000FF);
 }

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo/core/utils/constant/kColors.dart';
-import 'package:todo/ui/custom_widgets/custom_textformfield.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:provider/provider.dart';
+
+import 'package:todo/core/utils/constant/kColors.dart';
 import 'home_view_model.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+
   static const routeName = '/home-page';
+
   @override
   State<HomeView> createState() => _HomeViewState();
 }
@@ -22,10 +27,20 @@ class _HomeViewState extends State<HomeView> {
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text("Home"),
+              title: const Text("Home"),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      model.logOut(context);
+                    },
+                    icon: const Icon(Icons.logout_outlined))
+              ],
             ),
+            //
+            ///body section start
+            //
             body: Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               color: Colors.teal,
@@ -33,64 +48,101 @@ class _HomeViewState extends State<HomeView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: 20.h),
+                  //
+                  //user name
+                  //
                   Container(
-                      height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                       color: kColors.whiteColor,
-                      child: Center(
-                        child: Text(
-                          "Hello user",
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      )),
-                  SizedBox(height: 10),
-                  Container(
+                    ),
                     height: 80,
-                    color: kColors.whiteColor,
+                    child: Center(
+                      child: model.userName == null
+                          ? const CircularProgressIndicator()
+                          : Text(
+                              "Hello ${model.userName}",
+                              style: const TextStyle(fontSize: 30),
+                            ),
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  //
+                  // show time
+                  //
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: kColors.whiteColor,
+                    ),
+                    height: 80,
                     child: Center(
                       child: Text(
                         'Good ${model.label()}',
-                        style: TextStyle(fontSize: 30),
+                        style: const TextStyle(fontSize: 30),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 30.h),
+                  //
+                  // show todos
+                  //
                   Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        itemCount: model.todo.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return Dismissible(
-                            key: Key(model.todo[index]),
-                            onDismissed: (DismissDirection direction) {
-                              setState(() {
-                                model.todo.removeAt(index);
-                              });
-                            },
-                            child: Card(
-                              margin: const EdgeInsets.all(10),
-                              child: ListTile(
-                                title: Text(model.todo[index]),
-                                trailing: SizedBox(
-                                  width: 100,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {}),
-                                    ],
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: model.stream().snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return ListView.builder(
+                            itemCount: streamSnapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              return Dismissible(
+                                key: UniqueKey(),
+                                onDismissed: (DismissDirection direction) {
+                                  model.delete(documentSnapshot.id, context);
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    title: documentSnapshot['status'] == false
+                                        ? Text(documentSnapshot['todo'])
+                                        : Text(
+                                            documentSnapshot['todo'],
+                                            style: const TextStyle(
+                                                decoration:
+                                                    TextDecoration.lineThrough),
+                                          ),
+                                    leading: Checkbox(
+                                      value: documentSnapshot['status'],
+                                      onChanged: (value) {
+                                        model.updateStatus(
+                                            documentSnapshot, value!);
+                                      },
+                                    ),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => model.update(
+                                          documentSnapshot, context),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           );
-                        },
-                      ),
+                        }
+
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
                     ),
                   ),
+                  //
+                  //add todos
+                  //
                   Card(
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
@@ -98,8 +150,6 @@ class _HomeViewState extends State<HomeView> {
                         controller: model.todoController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              top: 15), // add padding to adjust text
                           isDense: true,
                           hintText: 'add todo',
                           hintStyle: TextStyle(
@@ -109,18 +159,14 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       trailing: SizedBox(
-                        width: 100,
+                        width: 100.w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
                                 icon: const Icon(Icons.add),
                                 onPressed: () {
-                                  setState(() {
-                                    model.label();
-                                    model.todo.add(
-                                        model.todoController.text.toString());
-                                  });
+                                  model.createTodo(context);
                                 }),
                           ],
                         ),

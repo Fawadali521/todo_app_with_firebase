@@ -13,7 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,10 +30,15 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 useMaterial3: true,
               ),
-              initialRoute: LoginView.routeName,
+              // home: (FirebaseAuth.instance.currentUser != null)
+              //     ? HomeView()
+              //     : LoginView(),
+              initialRoute: (FirebaseAuth.instance.currentUser != null)
+                  ? HomeView.routeName
+                  : LoginView.routeName,
               routes: {
-                LoginView.routeName: (context) => LoginView(),
-                SignUpView.routeName: (context) => SignUpView(),
+                LoginView.routeName: (context) => const LoginView(),
+                SignUpView.routeName: (context) => const SignUpView(),
                 HomeView.routeName: (context) => HomeView(),
               });
         });

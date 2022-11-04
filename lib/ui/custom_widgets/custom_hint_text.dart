@@ -15,14 +15,17 @@ class CustomHintText extends StatelessWidget {
       children: [
         Text(
           text,
-          style: Theme.of(context).textTheme.bodySmall,
+          style: const TextStyle(
+              color: kColors.whiteColor,
+              fontSize: 15,
+              decoration: TextDecoration.underline),
         ),
         GestureDetector(
           onTap: ontap,
           child: Text(
             buttonText,
             style: const TextStyle(
-                color: kColors.mainColor,
+                color: kColors.whiteColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline),
