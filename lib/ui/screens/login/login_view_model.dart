@@ -4,15 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo/core/utils/constant/kColors.dart';
-
 import '../../../core/utils/package_utils.dart';
 import '../home/home_view.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginViewModel with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   UserCredential? userCredential;
+  //
+  //Login Account Method
+  //
   void loginAccount(BuildContext context) async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
